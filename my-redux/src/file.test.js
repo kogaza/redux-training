@@ -73,3 +73,34 @@ it('Change state', () => {
   
   //--------------------------------------------------------------------------------------------
 
+it('Change state 2', () => {
+  const stateBefore = [
+    {
+      id: 0,
+      text: 'Learn Redux',
+      completed: false
+    }
+  ];
+  const action = {
+    type: 'ADD_TODO',
+    id: 1,
+    text: 'Learn Redux'
+  };
+  const stateAfter = [
+    {
+      id: 0,
+      text: 'Learn Redux',
+      completed: false
+    },
+    {
+      id: 1,
+      text: 'Learn Redux',
+      completed: false
+    }
+  ];
+  expect(
+    todos(stateBefore, action)
+    ).toEqual(stateAfter);
+  })
+  
+  //--------------------------------------------------------------------------------------------
