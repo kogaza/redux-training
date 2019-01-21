@@ -5,6 +5,8 @@ import { createStore } from 'redux';
 // import App from './App';
 // import * as serviceWorker from './serviceWorker';
 
+// ReactDOM.render( <App />, document.getElementById('root'));
+
 const counter = (state = 0, action) => {
     switch (action.type) {
         case 'INCREMENT':
@@ -50,3 +52,5 @@ const render = () => {
 
 store.subscribe(render);
 render();
+
+
