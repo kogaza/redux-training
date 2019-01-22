@@ -1,3 +1,4 @@
+
 const addCounter = (list) => {
   list.push(0);
   return list
@@ -31,26 +32,69 @@ it('Toggle Todo', () => {
   };
   expect(
     toggleTodo(todoBefore)
-    ).toEqual(todoAfter);
-  })
+  ).toEqual(todoAfter);
+})
 
-  //--------------------------------------------------------------------------------------------
-  
-  const todos = (state = [], action) => {
-    switch (action.type) {
+//--------------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------
+
+const todo = (state, action) => {
+  switch (action.type) {
     case 'ADD_TODO':
-    return [
-      ...state,
-      {
+      return {
         id: action.id,
         text: action.text,
         completed: false
+      };
+    case 'TOGGLE_TODO':
+      if (state.id !== action.id) {
+        return state;
       }
-    ];
+      return {
+        ...state,
+        completed: !state.completed
+      }
     default:
-    return state;
+      return state;
+  }
+}
+
+const todos = (state = [], action) => {
+  switch (action.type) {
+    case 'ADD_TODO':
+      return [
+        ...state,
+        todo(undefined, action)
+      ];
+    case 'TOGGLE_TODO':
+      return state.map(t => todo(t, action));
+    default:
+      return state;
   }
 };
+
+const visibilityFilter = (state = 'SHOW_ALL', action) => {
+  switch (action.type) {
+    case 'SET_VISIBILITY_FILTER':
+      return action.filter;
+    default:
+      return state;
+  }
+};
+
+const todoApp = (state = {}, action) => {
+  return {
+    todos: todos(
+      state.todos,
+      action
+    ),
+    visibilityFilter: visibilityFilter(
+      state.visibilityFilter,
+      action
+    )
+  };
+};
+
 
 it('Change state', () => {
   const stateBefore = [];
@@ -68,10 +112,9 @@ it('Change state', () => {
   ];
   expect(
     todos(stateBefore, action)
-    ).toEqual(stateAfter);
-  })
-  
-  //--------------------------------------------------------------------------------------------
+  ).toEqual(stateAfter);
+})
+
 
 it('Change state 2', () => {
   const stateBefore = [
@@ -100,7 +143,40 @@ it('Change state 2', () => {
   ];
   expect(
     todos(stateBefore, action)
-    ).toEqual(stateAfter);
-  })
-  
-  //--------------------------------------------------------------------------------------------
+  ).toEqual(stateAfter);
+})
+
+
+it('State toggle todo', () => {
+  const stateBefore = [
+    {
+      id: 0,
+      text: 'Learn Redux',
+      completed: false
+    },
+    {
+      id: 1,
+      text: 'Go to the cinema',
+      completed: false
+    }
+  ];
+  const action = {
+    type: 'TOGGLE_TODO',
+    id: 1
+  };
+  const stateAfter = [
+    {
+      id: 0,
+      text: 'Learn Redux',
+      completed: false
+    },
+    {
+      id: 1,
+      text: 'Go to the cinema',
+      completed: true
+    }
+  ];
+  expect(
+    todos(stateBefore, action)
+  ).toEqual(stateAfter)
+})
