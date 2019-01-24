@@ -5,6 +5,7 @@
   "dependencies": {
     "jest-dom": "^3.0.0",
     "jest-enzyme": "^7.0.1",
+    "prop-types": "^15.6.2",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-redux": "^6.0.0",
