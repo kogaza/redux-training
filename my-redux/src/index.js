@@ -1,62 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import PropTypes from 'prop-types';
 import { Provider, connect } from 'react-redux';
 import './index.css';
 import { createStore, combineReducers } from 'redux';
 // import App from './App';
 // import * as serviceWorker from './serviceWorker';
-
-// ReactDOM.render( <App />, document.getElementById('root'));
-
-// ----- counter -----
-
-// const counter = (state = 0, action) => {
-//     switch (action.type) {
-//         case 'INCREMENT':
-//             return state + 1;
-//         case 'DECREMENT':
-//             return state - 1;
-//         default:
-//             return state;
-//     }
-// }
-
-// const Counter = ({
-//     value,
-//     onIncrement,
-//     onDecrement
-// }) => (
-//         <div>
-//             <h1>{value}</h1>
-//             <button onClick={onIncrement}>+</button>
-//             <button onClick={onDecrement}>-</button>
-//         </div>
-//     );
-
-// const store = createStore(counter);
-
-// const render = () => {
-//     ReactDOM.render(
-//         <Counter
-//             value={store.getState()}
-//             onIncrement={() =>
-//                 store.dispatch({
-//                     type: 'INCREMENT'
-//                 })
-//             }
-//             onDecrement={() =>
-//                 store.dispatch({
-//                     type: 'DECREMENT'
-//                 })
-//             }
-//         />,
-//         document.getElementById('root'));
-// };
-
-// store.subscribe(render);
-// render();
-
 
 const todo = (state, action) => {
     switch (action.type) {
@@ -107,6 +55,32 @@ const todoApp = combineReducers({
     visibilityFilter
 });
 
+
+//actions
+let nextTodoId = 0;
+const addTodo = (text) => {
+    return {
+        type: 'ADD_TODO',
+        id: nextTodoId++,
+        text
+    };
+};
+
+const toggleTodo = (id) => {
+    return {
+        type: 'TOGGLE_TODO',
+        id
+    };
+};
+
+const setVisibilityFilter = (filter) => {
+    return {
+        type: 'SET_VISIBILITY_FILTER',
+        filter
+    };
+};
+
+//other
 const Link = ({ active, children, onClick }) => {
     if (active) {
         return <span> {children} </span>
@@ -132,10 +106,7 @@ const mapStateToLinkProps = ( state, ownProps ) => {
 const mapDispatchToLinkProps = ( dispatch, ownProps ) => {
     return {
         onClick: () => {
-            dispatch({
-                type: 'SET_VISIBILITY_FILTER',
-                filter: ownProps.filter
-            });
+            dispatch(setVisibilityFilter(ownProps.filter));
         }
     };
 }
@@ -192,7 +163,6 @@ const TodoList = ({ todos, onTodoClick }) => (
     </ul>
 );
 
-let nextTodoId = 0;
 let AddTodo = ({ dispatch }) => {
     let input;
 
@@ -202,11 +172,7 @@ let AddTodo = ({ dispatch }) => {
                 input = node;
             }} />
             <button onClick={() => {
-                dispatch({
-                    type: 'ADD_TODO',
-                    id: nextTodoId++,
-                    text: input.value
-                })
+                dispatch(addTodo(input.value))
                 input.value = '';
             }}>
                 Add todo
@@ -237,11 +203,8 @@ const mapStateToTodoListProps = (state) => {
 };
 const mapDispatchToTodoListProps = (dispatch) => {
     return {
-        onTodoClick: id => 
-        dispatch({
-            type: 'TOGGLE_TODO',
-            id
-        })
+        onTodoClick: (id) => 
+        dispatch(toggleTodo(id))
     };
 };
 
